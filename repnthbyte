@@ -1,0 +1,30 @@
+#!/usr/bin/env python
+# Reads chunks of length l from stdin.
+# Replaces N bytes at offset n with n bytes from file F.
+# When f has been exhausted, it does not replace anymore bytes, just outputs
+# when was in the original file
+# When the input has been exhausted, the program halts
+import sys
+if len(sys.argv) != 5:
+    sys.stderr.write(
+        'Arguments are %s chunk-length offset replacement-length file\n' 
+                            % sys.argv[0])
+    exit(-1)
+l=int(sys.argv[1])
+n=int(sys.argv[2])
+N=int(sys.argv[3])
+F=open(sys.argv[4],'r');
+while True:
+    chunk = bytearray(sys.stdin.read(l))
+    if len(chunk) < (n+N):
+        break
+    new_chunk = bytearray(F.read(N))
+    if len(new_chunk) < N:
+        repl_N = len(new_chunk)
+    else:
+        repl_N = N
+    chunk[n:n+repl_N] = new_chunk
+    sys.stdout.write(chunk)
+    if len(chunk) < l:
+        break
+exit(0)
